@@ -1,4 +1,4 @@
 # APPM5720-watwood-matt
-Haiku's are easy
-But they don't always make sense
+Haiku's are easy<br>
+But they don't always make sense<br>
 Refrigerator
