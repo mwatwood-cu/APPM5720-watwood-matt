@@ -1,4 +1,5 @@
-# APPM5720-watwood-matt
+# APPM 5720 Matt Watwood Repo
+## Intro Fun
 Haiku's are easy<br>
 But they don't always make sense<br>
-Refrigerator
+Refrigerator<br><br>
