@@ -53,7 +53,6 @@ void WaveSimulation::Initialize(int grid_points_x, int grid_points_y, double x_s
     
     m_speed_sound.define(1, -1, m_y_grid_points, -1, m_x_grid_points);
     m_speed_sound.set_value(1);
-    cout<<m_speed_sound.m_npts<<endl;   
 
     m_time_steps = 1;
 }
@@ -133,12 +132,15 @@ void WaveSimulation::print_all()
 
 void WaveSimulation::Verbose_Test()
 {
-    cout<<"Testing u = sin(4y) du = -16sin(4y)"<<endl;
-    //Test `
+    cout<<"Testing u = sin(4x+3)cos(3y+5) and c = 1 for all (x,y)"<<endl;
+
+   double y_value;
+   double x_value;
     for(int i=-1; i<=m_y_grid_points;i++) {
         for(int j=-1; j<=m_x_grid_points; j++) {
-            double y_value =(double)i/m_y_grid_points*(m_y_end-m_y_start);
-            m_solution_array(i,j) = sin(4*y_value);
+            x_value =(double)j/m_x_grid_points*(m_x_end-m_x_start);
+            y_value =(double)i/m_y_grid_points*(m_y_end-m_y_start);
+            m_solution_array(i,j) = sin(4*x_value+3)*cos(3*y_value+5);
         }
     } 
    D2array exact;
@@ -146,8 +148,10 @@ void WaveSimulation::Verbose_Test()
    exact.set_value(0);
    for(int i=0; i<m_y_grid_points;i++) {
         for(int j=0; j<m_x_grid_points; j++) {
-            double y_value =(double)i/m_y_grid_points*(m_y_end-m_y_start);
-            exact(i,j) = -16*sin(4*y_value);
+            y_value =(double)i/m_y_grid_points*(m_y_end-m_y_start);
+            x_value =(double)j/m_x_grid_points*(m_x_end-m_x_start);
+            exact(i,j) = -16*sin(4*x_value+3)*cos(3*y_value+5)
+                        -9*cos(3*y_value+5)*sin(4*x_value+3);
         }
     } 
    
@@ -166,12 +170,13 @@ void WaveSimulation::Verbose_Test()
 double WaveSimulation::Calculate_Error(D2array& solution, D2array& approx, int type)
 {
     double error = 0;
+    double h = (m_x_end-m_x_start)/m_x_grid_points;
     if(type ==0)
     {
         double tmp_error = 0;
         for(int i=0; i<m_y_grid_points;i++) {
             for(int j=0; j<m_x_grid_points; j++) {
-                tmp_error += abs(solution(i,j)-approx(i,j));
+                tmp_error += abs(solution(i,j)-approx(i,j))*h;
             }
             error = tmp_error>error?tmp_error:error;
             tmp_error = 0;
@@ -182,7 +187,7 @@ double WaveSimulation::Calculate_Error(D2array& solution, D2array& approx, int t
         double tmp_error = 0;
         for(int j=0; j<m_x_grid_points;j++) {
             for(int i=0; i<m_y_grid_points; i++) {
-               tmp_error += abs(solution(i,j)-approx(i,j));
+               tmp_error += abs(solution(i,j)-approx(i,j))*h;
             }
             error = tmp_error>error?tmp_error:error;
             tmp_error = 0;
@@ -190,14 +195,13 @@ double WaveSimulation::Calculate_Error(D2array& solution, D2array& approx, int t
     }
     else
     {
-        cout<<"Here"<<endl;
         for(int i=0; i<m_y_grid_points;i++) {
             for(int j=0; j<m_x_grid_points; j++) {
                 double diff = solution(i,j)-approx(i,j);
                 error += pow(diff,2);
             }
         }
-        error = pow(error, 0.5);
+        error = pow(error*h, 0.5);
     }
     return error;
 }

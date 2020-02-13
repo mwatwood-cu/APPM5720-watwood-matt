@@ -3,9 +3,10 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
-    WaveSimulation w(1000, 1000, 0, 1, 0, 1);
+    int grid_points = atoi(argv[1]);
+    WaveSimulation w(grid_points, grid_points, 0, 1, 0, 1);
     w.Verbose_Test();
 
     //w.Calculate_Laplacian();
