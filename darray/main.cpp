@@ -3,12 +3,18 @@
 #include <cmath>
 #include "D1array.h"
 #include "D2array.h"
+#include <chrono>
 
+using namespace std::chrono;
 using namespace std;
 
 // Main program
 int main()
 {
+    D2array u1(4, -15, 16, -31, 32);
+    D2array u2(16, -31, 32, -31,32);
+ 
+    /*
     D1array u(2,-1,3);
     double a;
     int count = 0;
@@ -45,7 +51,7 @@ int main()
                 cout << "(" << c << ", " << i << ", "<<j<<") = "<< v2(c,i,j)<<" at index "<< v2.m_base+c*v2.m_offc+i*v2.m_offi+j*v2.m_offj << "\n";
             }
         }
-    }
+    }*/
        
     return 0;
 }
