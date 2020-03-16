@@ -41,9 +41,10 @@ void WaveSimulation::Initialize(int grid_points_x, int grid_points_y, double x_s
     //Creating arrays
     m_solution_array.define(1, -1, m_y_grid_points, -1, m_x_grid_points);
     m_solution_array.set_value(0);
+    double y_value;
     for(int i=-1; i<=m_y_grid_points;i++) {
         for(int j=-1; j<=m_x_grid_points; j++) {
-            double y_value =(double)i/m_y_grid_points*(m_y_end-m_y_start);
+            y_value =(double)i/m_y_grid_points*(m_y_end-m_y_start);
             m_solution_array(i,j) = y_value*y_value;
         }
     }

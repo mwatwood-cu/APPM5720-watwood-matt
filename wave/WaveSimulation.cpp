@@ -7,7 +7,7 @@ WaveSimulation::WaveSimulation(){
     m_yB = -1.0;
     m_yE =  1.0;
     m_tend = 3.0;
-    m_Nx = 400;
+    m_Nx = 9600;
     m_Ny = 400;
     m_CFL = 0.3;
     set_up_arrays();
@@ -27,12 +27,14 @@ double WaveSimulation::compute_energy()
 void WaveSimulation::advance(){
     double dt2 = m_dt*m_dt;
     if(!m_forced){
+#pragma omp for
         for(int j = 0 ; j <= m_Ny; j++)
             for(int i = 0 ; i <= m_Nx; i++)
                 m_up(i,j) = 2.0*m_u(i,j)-m_um(i,j) + dt2*m_lap(i,j);
     }
     else{
         double s = m_dt*m_dt*time_source();
+#pragma omp for
         for(int j = 0 ; j <= m_Ny; j++)
             for(int i = 0 ; i <= m_Nx; i++)
                 m_up(i,j) = 2.0*m_u(i,j)-m_um(i,j)
@@ -41,6 +43,7 @@ void WaveSimulation::advance(){
 };
 
 void WaveSimulation::swap_times(){
+#pragma omp for
     for(int j = 0 ; j <= m_Ny; j++)
         for(int i = 0 ; i <= m_Nx; i++){
             m_um(i,j) = m_u(i,j);
@@ -50,17 +53,21 @@ void WaveSimulation::swap_times(){
 
 void WaveSimulation::set_boundary_conditions(double t){
 if(m_bc.boundary_style == 1) {
+#pragma omp for
     for(int j = 0 ; j <= m_Ny; j++){
         int i = 0;
         m_u(i,j) = m_bc.get_boundary_value(i,j,t);
     }
+#pragma omp for
     for(int j = 0 ; j <= m_Ny; j++){
         int i = m_Nx;
         m_u(i,j) = m_bc.get_boundary_value(i,j,t); 
     }
+#pragma omp for
     for(int i = 0 ; i <= m_Nx; i++){
         m_u(i, 0) = m_bc.get_boundary_value(i,0,t);
     }
+#pragma omp for
     for(int i = 0 ; i <= m_Nx; i++){
         int j = m_Ny;
         m_u(i,j) = m_bc.get_boundary_value(i,j,t);
@@ -113,7 +120,7 @@ void WaveSimulation::compute_laplace()
   
     double dx2i = 0.5/m_hx/m_hx;
     double dy2i = 0.5/m_hy/m_hy;
-    
+#pragma omp for
     for(int j = 0 ; j <= m_Ny; j++)
         for(int i = 0 ; i <= m_Nx; i++){
             m_lap(i,j) =
@@ -161,11 +168,13 @@ void WaveSimulation::set_up_grids(){
 
 void WaveSimulation::set_up_material(int k){
     if(k==1){
+#pragma omp for
         for(int j = -1; j<= m_Ny+1;j++)
             for(int i = -1; i<= m_Nx+1;i++)
                 m_c2(i,j) = 1.0 + 0.9*sin(3.0*m_x(i))*cos(2*m_y(j)+1.2);
     }
     else if(k==2){
+#pragma omp for
         for(int j = -1; j<= m_Ny+1;j++)
             for(int i = -1; i<= m_Nx+1;i++)
                 m_c2(i,j) = 1.0 + 0.9*sin(5.0*m_x(i))*cos(7.0*m_y(j)+1.2);
@@ -183,6 +192,7 @@ void WaveSimulation::set_up_forcing(int k){
     else if (k == 1){
         m_forced = true;
         double sig = 144.0;
+#pragma omp for
         for(int j = 0; j<= m_Ny;j++)
             for(int i = 0; i<= m_Nx;i++)
                 m_f(i,j) = exp(-sig*(pow(m_x(i),2)+pow(m_y(j),2)));
@@ -216,6 +226,7 @@ void WaveSimulation::set_up_initial_data(int k){
     else if(k==1){
         m_u.set_value(0.0);
         double y2;
+#pragma omp parallel
         for(int j = 0; j<=m_Ny; j++){
             y2 = m_y(j)*m_y(j);
             for(int i = 0; i<= m_Nx; i++){

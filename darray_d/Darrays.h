@@ -3,6 +3,7 @@
 #ifndef __DARRAYS_H_INCLUDED__   
 
 #define __DARRAYS_H_INCLUDED__   
+#include "omp.h"
 
 class Darray1
 {

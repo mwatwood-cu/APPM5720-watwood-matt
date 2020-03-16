@@ -1,4 +1,5 @@
 // A simple one dimensional array class that can use arbitrary index range
+#include "omp.h"
 
 class Darray
 {

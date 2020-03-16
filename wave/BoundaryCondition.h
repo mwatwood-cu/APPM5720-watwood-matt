@@ -1,6 +1,7 @@
 #include  <iostream>
 #include <cmath>
 #include "Darrays.h"
+#include "omp.h"
 
 using namespace std;
 

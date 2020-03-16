@@ -9,6 +9,7 @@
 #include <chrono> 
 #include "silo.h"
 #include "BoundaryCondition.h"
+#include "omp.h"
 
 using namespace std::chrono;
 using namespace std;

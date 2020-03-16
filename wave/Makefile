@@ -8,10 +8,10 @@ SILO_LIB = /projects/mawa7160/APPM_HPC/Software/silo/lib
 SILO_INC = /projects/mawa7160/APPM_HPC/Software/silo/include
 DARRAY_LIB = ../darray_d
 DARRAY_INC = ../darray_d
-LDFLAGS = -L$(SILO_LIB) -lsilo -L$(DARRAY_LIB) -ldarray
+LDFLAGS = -L$(SILO_LIB) -lsilo -L$(DARRAY_LIB) -ldarray -fopenmp
 CXXINCLUDE = -I$(DARRAY_INC) -I$(SILO_INC)
 # CXXFLAGS = -g -O0 -pg -DBZ_DEBUG 
-CXXFLAGS = -O3
+CXXFLAGS = -O3 -fopenmp
 
 OBJECTS = main.o WaveSimulation.o BoundaryCondition.o
 EXEC = ex.x	

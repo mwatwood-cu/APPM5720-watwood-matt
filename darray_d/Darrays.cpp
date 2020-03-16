@@ -83,6 +83,7 @@ void Darray1::define(int ibeg, int iend)
 //-----------------------------------------------------------------------
 void Darray1::set_value(double scalar)
 {
+#pragma omp for
     for( size_t i = 0 ; i < m_npts ; i++ )
         m_data[i] = scalar;
 }
@@ -120,6 +121,7 @@ void Darray1::copy( const Darray1& u )
     if( m_nc*m_ni > 0 )
     {
         m_data = new double[m_nc*m_ni];
+#pragma omp for
         for( int i = 0 ; i < m_nc*m_ni ; i++ )
             m_data[i] = u.m_data[i];
     }
@@ -219,6 +221,7 @@ void Darray2::define(int ibeg, int iend, int jbeg, int jend)
 //-----------------------------------------------------------------------
 void Darray2::set_value(double scalar)
 {
+#pragma omp for
     for( size_t i = 0 ; i < m_npts ; i++ )
         m_data[i] = scalar;
 }
@@ -261,6 +264,7 @@ void Darray2::copy( const Darray2& u )
     if( m_nc*m_nj*m_ni > 0 )
     {
         m_data = new double[m_nc*m_ni*m_nj];
+#pragma omp for
         for( int i = 0 ; i < m_nc*m_ni*m_nj ; i++ )
             m_data[i] = u.m_data[i];
     }

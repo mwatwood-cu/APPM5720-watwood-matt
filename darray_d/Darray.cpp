@@ -82,6 +82,7 @@ void Darray::define(int ibeg, int iend)
 //-----------------------------------------------------------------------
 void Darray::set_value(double scalar)
 {
+#pragma omp for
     for( size_t i = 0 ; i < m_npts ; i++ )
         m_data[i] = scalar;
 }
@@ -119,6 +120,7 @@ void Darray::copy( const Darray& u )
     if( m_nc*m_ni > 0 )
     {
         m_data = new double[m_nc*m_ni];
+#pragma omp for
         for( int i = 0 ; i < m_nc*m_ni ; i++ )
             m_data[i] = u.m_data[i];
     }
